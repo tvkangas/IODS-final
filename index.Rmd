@@ -1,6 +1,9 @@
 ---
 title: "IODS course final assignment"
-author: Tuukka Kangas
+author: |
+  | Tuukka Kangas
+  | tuukka.kangas@helsinki.fi
+date: February 26, 2017
 output:
   html_document:
     theme: simplex
