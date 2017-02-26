@@ -1,12 +1,74 @@
-######################
-Recalculated variables
-######################
+#########
+Variables
+#########
 
+city
+	Name of the city
 
+country
+	Name of the country
+
+capital
+	Is city a capital or not
+
+faircourt
+	Original variable rq1c_mean
+	% of citizens claiming that it is very likely or likely that homeowners suing the government obtain fair compensation in court
+
+safe
+	Original variable rq14_mean
+	% of citizens claiming that it is very safe or safe walking in their neighborhood at night
+
+break
+	Original variable rq30_mean
+	% of citizens claiming that in the last 3 years someone actually broke into their home/residence without permission, and steal or try to steal 
+
+workdis
+	Original variable rq29_mean
+	% of citizens feeling discriminated against in their country when looking for a job, or when they were at work, while thinking about the last 12 months
+
+trust
+	rq17b_mean, rq17d_mean, rq17e_mean
+	Trust in different authorities
+
+corruption
+	rq18a_mean, rq18b_mean, rq18d_mean, rq18e_mean
+	Corruption in different authorities
+
+freedom
+	rq38c_mean, rq38d_mean, rq38e_mean, rq38f_mean, rq34a_mean, rq34b_mean, rq34c_mean, rq34d_mean, rq34e_mean, rq34f_mean, rq34g_mean, rq34h_mean
+	Citicens' freedom
+
+bribe
+	rq36a_mean, rq36b_mean, rq36c_mean, rq36d_mean, rq36e_mean
+	Giving bribe to the authorities
+
+houdem	
+	rq1b_1_mean, rq1b_3_mean
+	If the house demolition is unfair
+
+busfine
+	rq13a_mean, rq13b_mean
+	Small business are fined if let taxes paid or not do equired documentation
+
+govopen
+	rq15d_mean, rq15b_mean
+	Openess of local government
+
+lawful
+	rq37a_mean, rq37b_mean, rq37c_mean, rq37d_mean
+	Lawful, police and court
+
+citypop
+	The population of the city
+
+share
+	The population of the city / the population of the city
 
 #####################
 External data sources
 #####################
+
 Country populations are from The World Factbook (CIA).
 
 City populations are from https://en.wikipedia.org/wiki/List_of_cities_in_the_European_Union_by_population_within_city_limits

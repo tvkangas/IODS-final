@@ -32,7 +32,7 @@ data_narmv <- dplyr::select(data_narmv, -starts_with("rq17"))
 data_narmv <- mutate(data_narmv, corruption = (data_narmv$rq18a_mean + data_narmv$rq18b_mean + data_narmv$rq18d_mean + data_narmv$rq18e_mean) / 4)
 data_narmv <- dplyr::select(data_narmv, -starts_with("rq18"))
 
-#Freedom, 12 variables that covers citicens freedom
+#Freedom, 12 variables that covers citicens' freedom
 data_narmv$freedom <- rowMeans(subset(data_narmv, select = c(rq38c_mean, rq38d_mean, rq38e_mean, rq38f_mean, rq34a_mean, rq34b_mean, rq34c_mean, rq34d_mean, rq34e_mean, rq34f_mean, rq34g_mean, rq34h_mean)), na.rm = TRUE)
 data_narmv <- dplyr::select(data_narmv, -starts_with("rq34"))
 data_narmv <- dplyr::select(data_narmv, -starts_with("rq38"))
@@ -91,9 +91,11 @@ data_final <- dplyr::select(data_final, -starts_with("countryP"))
 colnames(data_final)[which(names(data_final) == "cityPop")] <- "citypop"
 data_final$citypop <- data_final$citypop / 1000
 
+write.csv(data_final, file="trustdata.csv")
+
 ########
 #Summary
 
 #After wrangling in the dataset is 17 variables.
-#13 are recalcuted from the original dataset
+#12 are recalcuted from the original dataset
 #Two of them are joined from the external source
