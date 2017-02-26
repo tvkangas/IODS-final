@@ -1,0 +1,14 @@
+######################
+Recalculated variables
+######################
+
+
+
+#####################
+External data sources
+#####################
+Country populations are from The World Factbook (CIA).
+
+City populations are from https://en.wikipedia.org/wiki/List_of_cities_in_the_European_Union_by_population_within_city_limits
+Those cities that aren't on the list, their populations are from their Wikipedia pages
+

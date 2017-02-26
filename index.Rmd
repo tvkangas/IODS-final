@@ -17,7 +17,7 @@ output:
 
 ***
   
-```{r child = "pca.Rmd"}
+```{r child = "final.Rmd"}
 ```
   
 ***
