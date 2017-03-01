@@ -1,0 +1,47 @@
+---
+title: "IODS course final assignment, data visualization"
+author: |
+  | Tuukka Kangas
+  | tuukka.kangas@helsinki.fi
+date: February 26, 2017
+runtime: shiny
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(shiny)
+library(ggplot2)
+library(dplyr)
+``` 
+
+This document includes data visualization tool for my final assignment in IODS course. 
+
+Because of the high number of the variable combinatios, I wanted to create an interactive tool for doing scatter plots. For that purpose I need to use _shiny_-package.
+
+
+```{r eruptions, echo=FALSE}
+visudata <- read.csv("visudata.csv", sep=",", dec=".", header = TRUE)
+rownames(visudata) <- visudata$X
+visudata <- dplyr::select(visudata, -X)
+
+inputPanel(
+  selectInput("varx", label = "x-variable",
+              choices = c("faircourt" = 1, "safe" = 2, "break" = 3, "workdis" = 4, "trust" = 5, "corruption" = 6, "freedom" = 7, "bribe" = 8, "houdem" =9 , "busfine" = 10, "govopen" = 11, "lawful"=12), selected = 1),
+  selectInput("vary", label = "y-variable",
+              choices = c("faircourt" = 1, "safe" = 2, "break" = 3, "workdis" = 4, "trust" = 5, "corruption" = 6, "freedom" = 7, "bribe" = 8, "houdem" =9 , "busfine" = 10, "govopen" = 11, "lawful"=12), selected = 11)
+)
+
+renderPlot({
+ggplot(data=visudata, aes(x=input$varx, y=input$vary, color=cluster, label = rownames(visudata) )) + 
+ geom_point() +
+ geom_text() +
+ labs(x = input$varx, y=input$vary, title="Scatter plot, visualization of different clusters")
+})
+```
+
+
+
