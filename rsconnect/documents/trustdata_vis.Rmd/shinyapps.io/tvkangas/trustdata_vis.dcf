@@ -1,0 +1,10 @@
+name: trustdata_vis
+title: trustdata_vis
+account: tvkangas
+server: shinyapps.io
+appId: 161146
+bundleId: 734318
+url: https://tvkangas.shinyapps.io/trustdata_vis/
+when: 1488700418.75549
+asMultiple: FALSE
+asStatic: FALSE

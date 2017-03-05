@@ -1,27 +1,29 @@
 ```{r}
 #Needed libraries
-library(GGally)
-library(ggplot2)
-library(corrplot)
-library(tidyr)
-library(dplyr)
-library(cluster)
-library(fpc)
+library(GGally, warn.conflicts = FALSE)
+library(ggplot2, warn.conflicts = FALSE)
+library(corrplot, warn.conflicts = FALSE)
+library(tidyr, warn.conflicts = FALSE)
+library(dplyr, warn.conflicts = FALSE)
+library(cluster, warn.conflicts = FALSE)
+library(fpc, warn.conflicts = FALSE)
 ```
 
+#Abstract
+The aim of this project was to see if there are differences between european cities concerning trust and quality of local governances. As a result I managed to make three clusters of cities. Clusters can be explained with location and wealth. In 10 out of 12 variables are statistically significant differences between cities. Clustering was provided with k-means clustering. Differences of clusters are analysed with ANOVA and Kruskal-Wallis Test.
 
 # Aim
-My aim is to visualize differences in trust and quality of local governances in different european cities. My goal is to find what are the most influental variables to explain quality and trust of local governances. 
+My aim is to visualize differences in trust and quality of local governances in different european cities. My goal is to find what are the most influental variables to explain differences between cities in quality and trust of local governances. 
 
 As a hypothesis, I think I will find clusters of cities. Because all cities are european, I think the cities are going to separate to the rich and poor countries. Another hypothesis is that northern european cities will be one group and southern european cities another one. As a result I hope that I have a plot that will clearly show us clusters of cities. 
 
 # Data
 
-The data that is used is Trust and Quality of Local Governance in European cities, [source](http://data.europa.eu/euodp/en/data/dataset/jrc-coin-regio-trust-and-quality-of-local-governance-in-european-cities-2011-2014). The dataset contains 69 cities in 28 eu-countries. The data is collected by multiple surveys. The publisher of the data is European Union and it was published in 2015. The data was collected 2011-2014. The original dataset contains 53 questionnaire variables, two background variable (country, is city capital) and one variable for id (city). The questionnaire variables are all numeric and have values between 0 and 1.
+The data that is used is Trust and Quality of Local Governance in European cities, [source](http://data.europa.eu/euodp/en/data/dataset/jrc-coin-regio-trust-and-quality-of-local-governance-in-european-cities-2011-2014). The dataset contains 69 cities in 28 eu-countries. The data is collected by multiple surveys. The publisher of the data is European Union and it was published in 2015. The data was collected 2011-2014. The original dataset contains 53 questionnaire variables, two background variable (country, is city capital) and one variable for id (city). The questionnaire variables are all numerical and have values between 0 and 1.
 
 Because dataset has some problems (especially missing values), too much variables and I would like have more background variables, there is done some data wrangling. The wrangling part is done in seperate script that can be found [here](https://github.com/tvkangas/IODS-final/blob/master/wrangling.R). In the script is explained what is done.
 
-After the wrangling, the dataset contains 17 variables. There is 12 varibleas from the surveys, but now most of them contains information from multiple original variables. Those 12 varibles contains information from trust and quality of local governance. There is also two variables describing population of the city: population share comparing to the country and the populations. Then there is id-variables and one variable that tells if the city is a capital. Variables are described thoroughly in separate file that can be found [here](https://github.com/tvkangas/IODS-final/blob/master/dataInformation.txt). In that text file is also source for the populations.
+After the wrangling, the dataset contains 17 variables. There are 12 variables from the surveys, but now most of them contains information from multiple original variables. Those 12 varibles contains information from trust and quality of local governance. There is also two variables describing population of the city: population share comparing to the country and the populations. Then there is id-variables and one factorial variable that tells if the city is a capital. Variables are described thoroughly in separate file that can be found [here](https://github.com/tvkangas/IODS-final/blob/master/dataInformation.txt). In that text file is also source for the populations.
 
 
 
@@ -49,9 +51,9 @@ corrplot(cor_matrix, method="circle", type="lower", cl.pos = "r", tl.pos = "d", 
 
 From the summaries can be seen that most of variables are numerical. Only factorial string variable is country. Most of numerical variables have values between 0 and 1. Expectations are _citypop_ that tells population in thousands and _capital_ that is binary. 29 % of cities are capitals. There is quite huge differences in populations (few big cities like London and Berlin, mean less than half million) and population shares between cities (e.g. 33 % of estonians are living in Tallinn, but mean is 5,6 %). There is some differences in distributions of other variables: some are quite uniformally ( _freedom_, _busfine_) distributed, but then there are some variables that are skewed ( _safe_, _corruption_, _bribe_, _lawful_). Other variables seems to more or less normally distributed. 
 
-With the correlation plot can be seen that there is some correlations between the variables. Capitals seems to be larger cities. Then there is bigger correlations between _corruption_, _trust_, _freedom_, _bribe_ and _lawful._ Then there is some variables that have very low correlations with other variables like _busfine_, _faircourt_, _houdem_ and _capital_. 
+With the correlation plot can be seen that there are some correlations between the variables. Capitals seems to be larger cities. Then there is bigger correlations between _corruption_, _trust_, _freedom_, _bribe_ and _lawful._ Then there is some variables that have very low correlations with other variables like _busfine_, _faircourt_, _houdem_ and _capital_. 
 
-For the further analysis, the dataset need to be standardized. That scales all variables so that mean is zero. 
+For the further analysis, the dataset need to be standardized. That scales all variables so that their means are zero. 
 
 ```{r}
 #The column country has to be ignored in the scaling. 
@@ -71,7 +73,7 @@ k-means clustering is an old method to cluster data. Its purpose is to do partit
 Analysis of variance (ANOVA) is a method that is used to analyze differences between groups. The main idea is to analyze if the means of the groups differ. ANOVA can be used for multiple groups so it's more versatile than t-test. The assumptions for ANOVA can be read from [Wikipedia](https://en.wikipedia.org/wiki/Analysis_of_variance#Assumptions_of_ANOVA), but main points are that observations need to be independent, residuals should be normally distributed and homoscedasticity (variances of the groups should be same). Other requirement is that mean can be calculated. I will do ANOVA with one depedent varible. The idea of ANOVA is that variance is separated two parts: between and within treatments. Then F-test is used to see if the difference is significant enough. Null hypothesis is always that there is no differences between groups. p-value of 0.05 is used as a limit.
 
 #k-means
-First step is to determine correct number of clusters. For the determination, the distances between the observations need to be calculated. Distances are calculated three different methods.
+First step is to determine correct number of clusters. For the determination, the distances between the observations need to be calculated. Distances are calculated with three different methods.
 
 ```{r}
 #Different methods for distance measurements
@@ -88,7 +90,6 @@ dist_min <- dist(dist_data, method = "minkowski") #minkowski
 summary(dist_eu)
 summary(dist_man)
 summary(dist_min)
-write.csv(data_final, file="dist_data.csv")
 ```
 
 It seems that all three distance measurement methods gives a little different results. Euclidean ja minkowski methods are giving quite same results, but manhattan method gives a bit larger values. I will continue with euclidean and manhattan methods.
@@ -121,21 +122,17 @@ print(paste0("Manhattan, 3 centroids: ", round(km_man_3$betweenss / km_man_3$tot
 
 ```
 
-A good indicator to the "goodness of k-means" is _Within cluster sum of squares by cluster_ that can be read from tables. That can be consider as a value that tells how much variance in the dataset can be explained with clustering. k-means with euclidean method (two centroids) is explaining 48 % of variance. With manhattan method (two and three centroids) values are 50 % and 65 % respectively. Adding centroids would increase that number, but it's not good idea because my dataset is quite small. Because of that, I will continue with k-means with euclidean distance measurement method with three centroids.
+A good indicator to the "goodness of k-means" is _Within cluster sum of squares by cluster_ that can be read from tables. That can be consider as a value that tells how much variance in the dataset can be explained with clustering. k-means with euclidean method (two centroids) is explaining 48 % of variance. With manhattan method (two and three centroids) values are 50 % and 65 % respectively. Adding centroids would increase that number, but it's not good idea because my dataset is quite small. Because of that, I will continue with k-means with manhattan distance measurement method with three centroids.
 
 ```{r}
 km_man_3
-#clusplot(dist_data, km_man_3$cluster, color=TRUE, col.p = c("BLACK", "RED", "BLUE"),shade=FALSE, 
-  	#labels=2, lines=0, main=("Bivariate Cluster Plot"))
 
 dist_data$cluster=factor(km_man_3$cluster)
 centers=as.data.frame(km_man_3$centers)
 trust_data$cluster<- km_man_3$cluster
 
-
 ````
-There is respectively 16, 29 and 24 cities in clusters. In cluster 1 there are cities especially from Balkan. In cluster 2 there is cities from Nordic countries and other rich countries. In cluster 3 there is cities from Southern Europe like Italy, Spain and Portugal. Of course those are only simplified groups, but it seems that there might be some pattern. It also seems that my hypothesis is at least somewhat right.
-
+There is respectively 16, 29 and 24 cities in the clusters. In cluster 1 there are cities especially from Balkan and Eastern Europe. In cluster 2 there is cities from Nordic countries and other rich countries. In cluster 3 there is cities from Southern Europe like Italy, Spain and Portugal. Of course those are only simplified groups, but it seems that there might be some pattern. It also seems that my hypothesis is at least somewhat right.
 
 ##Summary and notes, k-means
 Now I have performed k-means clustering. For me results are very interesting and it seems that clustering was successful. Now I am interested how to move on: I want to see what are the common factors in the groups, what are the most influental variables and what variables would predict clustering (if new city is brought to the data). 
@@ -168,7 +165,7 @@ plot(fitfreedom)
 plot(fitgovopen)
 ````
 
-Normality can be observed from (Normal) QQ-plot. If observations are forming a straight line, then residuals are normally distributed. With _freedom_ there is problems, but with _govopen_ everything seems to be alright. Homoscedasticity is more problematic espeacilly with _freedom_: residuals have pattern how they are compared to the zero-line. With _govopen_ same problems can't be seen. Because of that I will provide Kruskal-Wallis Test for _freedom_. KW-test is quite similar to ANOVA, but it uses medians, not means.
+Normality can be observed from (Normal) QQ-plot. If observations are forming a straight line, then residuals are normally distributed. With _freedom_ there is problems, but with _govopen_ everything seems to be alright. Homoscedasticity is more problematic espeacilly with _freedom_: residuals have pattern how they are compared to the zero-line. With _govopen_ same problems can't be seen. Because of that I will provide Kruskal-Wallis Test for _freedom_. K-W-test is quite similar to ANOVA, but it uses medians, not means.
 
 ```{r}
 kruskal.test(freedom ~ cluster, data=trust_data)
@@ -184,4 +181,14 @@ ggplot(data=dist_data, aes(x=govopen, y=freedom, color=cluster, label = rownames
  labs(x = "Openess of governance", y="Freedom", title="Scatter plot, visualization of different clusters")
 ````
 
-From the scatterplot can be easily seen differences between clusters. Northern Europe cities (cluster 3) are on top so they get higher scores in _freedom_. Below it is West Europe cities and on the bottom is Eastern Europe cities. There is some mixing, but the big picture can be seen easily. _govopen_ doesn't make differ so good: it seems that clusters 2 and 1 are quite thoroughly mixed and blue cities are more on the right-hand side. But because there would be 110 different scatter plots to visualize differences, I have provided better tool for that. It can be found here. 
+From the scatterplot can be easily seen differences between clusters. Northern Europe cities (cluster 3) are on top so they get higher scores in _freedom_. Below it is Western Europe cities and on the bottom is Eastern Europe cities. There is some mixing, but the big picture can be seen easily. _govopen_ doesn't make differ so good: it seems that clusters 2 and 1 are quite thoroughly mixed and blue cities are more on the right-hand side. But because there would be 144 different scatter plots to visualize differences, I have provided better tool for that. 
+
+# Shiny-app for data visualization
+
+I made a tool for data visualization. It can be found in my shinyapps-repository [here](https://tvkangas.shinyapps.io/trustdata_vis/). With this tool it's very easy and fast to see how cities are distributed in the scatter plot. For the app, the variables are named better.
+
+## Some results
+As ANOVA predicted, with variables _houdem_ and _busfine_ clusters are thoroughly mixed and any pattern can't be seen. With other variables clustering can be seen more or less clearly. With some variables (e.g. _safe_ and _bribe_) only one cluster is separating from two other. Good pairs for to see clustering can be found from correlation plot that is drawn on section Data.
+
+#Conclusions and discussion
+My aim was to to visualize differences in trust and quality of local governances in different european cities. In that perspective, I think I succeeded in my project. As a result, I managed to find three clusters of european cities. In clusters cities have some similarities like geographical location and how rich coutries are where the city is located. From 12 different variables 10 can somewhat explain differences between cities. According ANOVA, the best ones are _openess of governance_ and _freedom_. Good pairs for to see clustering can be found from correlation plot that is drawn on section _Data_. 

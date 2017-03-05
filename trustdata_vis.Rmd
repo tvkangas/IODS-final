@@ -3,9 +3,10 @@ title: "IODS course final assignment, data visualization"
 author: |
   | Tuukka Kangas
   | tuukka.kangas@helsinki.fi
-date: February 26, 2017
+date: March 5th, 2017
 runtime: shiny
 output: html_document
+    
 ---
 
 ```{r setup, include=FALSE}
@@ -14,33 +15,55 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(shiny)
-library(ggplot2)
-library(dplyr)
+library(ggplot2, warn.conflicts = FALSE)
+library(dplyr, warn.conflicts = FALSE)
 ``` 
 
-This document includes data visualization tool for my final assignment in IODS course. 
+This document includes data visualization tool for my final assignment in IODS course. GitHub-reposity for project can be found [here](https://github.com/tvkangas/IODS-final). In GitHub is full description for this project.
 
-Because of the high number of the variable combinatios, I wanted to create an interactive tool for doing scatter plots. For that purpose I need to use _shiny_-package.
+Because of the high number of the variable combinatios, I wanted to create an interactive tool for doing scatter plots. For that purpose I need to use _shiny_-package. With this tool user can easily see how cities are located when changing conditions for the plotting.
 
 
 ```{r eruptions, echo=FALSE}
-visudata <- read.csv("visudata.csv", sep=",", dec=".", header = TRUE)
-rownames(visudata) <- visudata$X
-visudata <- dplyr::select(visudata, -X)
+
+visudata <- read.csv("visual_data.csv", sep=";", dec=".", header = TRUE)
+
+rownames(visudata) <- visudata$city
+visudata <- dplyr::select(visudata, -city)
+visudata$cluster <- as.factor(visudata$cluster)
+visudata$overMillion <- as.factor(visudata$overMillion)
+visudata$capital <- as.factor(visudata$overMillion)
+
+muuttujat <- c("Fair compensation in court" = 'faircourt', "Safe at night" = 'safe', "Broke in the home" = 'broke', "Discriminated when looking for a job" = 'workdis', "Trust in different authorities" = 'trust', "Corruption in different authorities" = 'corruption', "Citicens' freedom" = 'freedom', "Giving bribe to the authorities" = 'bribe', "House demolition is unfair" ='houdem', "Small business are fined after illegal actions" = 'busfine', "Openess of local government" = 'govopen', "Lawful, police and court"='lawful')
 
 inputPanel(
-  selectInput("varx", label = "x-variable",
-              choices = c("faircourt" = 1, "safe" = 2, "break" = 3, "workdis" = 4, "trust" = 5, "corruption" = 6, "freedom" = 7, "bribe" = 8, "houdem" =9 , "busfine" = 10, "govopen" = 11, "lawful"=12), selected = 1),
-  selectInput("vary", label = "y-variable",
-              choices = c("faircourt" = 1, "safe" = 2, "break" = 3, "workdis" = 4, "trust" = 5, "corruption" = 6, "freedom" = 7, "bribe" = 8, "houdem" =9 , "busfine" = 10, "govopen" = 11, "lawful"=12), selected = 11)
+  selectInput(inputId ="varx", label = "x-variable",
+              choices = muuttujat, selected = 'faircourt'),
+  selectInput(inputId ="vary", label = "y-variable",
+              choices = muuttujat, selected = 'govopen')
 )
 
+regFormulaX <- reactive({
+    rtn <- (paste(input$varx))
+    rtn
+  })
+
+regFormulaY <- reactive({
+    rtn <- (paste(input$vary))
+    rtn
+  })
+
+
 renderPlot({
-ggplot(data=visudata, aes(x=input$varx, y=input$vary, color=cluster, label = rownames(visudata) )) + 
- geom_point() +
- geom_text() +
- labs(x = input$varx, y=input$vary, title="Scatter plot, visualization of different clusters")
+  
+ggplot(data=visudata, aes_string(x=regFormulaX(), y=regFormulaY())) + 
+ geom_point(aes(colour=cluster)) +
+ geom_text(aes(label=rownames(visudata), colour = cluster), size = 5) +
+ labs(x = regFormulaX(), y=regFormulaY(), title="Scatter plot, visualization of different clusters") +
+ theme(text = element_text(size=20))
 })
+
+
 ```
 
 

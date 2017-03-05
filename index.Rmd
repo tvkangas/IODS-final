@@ -3,7 +3,7 @@ title: "IODS course final assignment"
 author: |
   | Tuukka Kangas
   | tuukka.kangas@helsinki.fi
-date: February 26, 2017
+date: March 5th, 2017
 output:
   html_document:
     theme: simplex
@@ -13,6 +13,7 @@ output:
     fig_width: 6
     fig_height: 4
     code_folding: hide
+    number_sections: true
 ---
 
 ***
